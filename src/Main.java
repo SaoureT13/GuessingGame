@@ -1,7 +1,7 @@
 import java.util.*;
 
 public class Main {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         Scanner reader = new Scanner(System.in);
 
         System.out.print("Hello, do you want to play Guessing Game (y/N) ?:   ");
@@ -14,41 +14,51 @@ public class Main {
 
         while (answer == 'y') {
             guessingGame();
+
             System.out.print("\nDo you want to play again (y/N) ?:   ");
             answer = reader.next().charAt(0);
         }
         System.out.println("GoodBye");
     }
 
-    static public void guessingGame() {
+    static void guessingGame() {
         int randNum = (int) (Math.random() * 101);
+        int numberTries = 10;
         boolean winner = false;
-        int numberTries = 2;
-        Scanner reader = new Scanner(System.in);
 
-        while (true) {
-            System.out.printf("\nYou have %d essaies\n", numberTries);
-            System.out.print("Guess the number: ");
-            int essaie = reader.nextInt();
 
-            if (essaie == randNum) {
-                winner = true;
-                break;
-            }
-            numberTries--;
-            if (numberTries == 0) break;
-
-            if (essaie > randNum) {
-                System.out.println("The number is smaller");
-            }
-            if (essaie < randNum) {
-                System.out.println("The number is higher");
+        while (numberTries > 0) {
+            try {
+                System.out.printf("\nYou have %d essaies\n", numberTries);
+                System.out.print("Guess the number: ");
+                Scanner input = new Scanner(System.in);
+                int userTrial = input.nextInt();
+                winner = evaluateGuess(randNum, userTrial);
+                if (winner) {
+                    break;
+                }
+                numberTries--;
+            } catch (InputMismatchException e) {
+                System.out.println("You must enter a number");
             }
         }
+
         if (winner) {
-            System.out.println("Congratulations, you guessed it number");
+            System.out.println("\nCongratulations, you guessed the number !!");
         } else {
-            System.out.println("Sorry, you lost");
+            System.out.println("\nSorry, but you lost");
         }
+    }
+
+    static public boolean evaluateGuess(int winningNumber, int userTrial) {
+        boolean winner = userTrial == winningNumber;
+        if (userTrial > winningNumber) {
+            System.out.println("The number is smaller");
+        }
+        if (userTrial < winningNumber) {
+            System.out.println("The number is higher");
+        }
+
+        return winner;
     }
 }
